@@ -1,10 +1,6 @@
 /*
- * mm.dd.yy
- * 4.6.2024
- * 
- * comment import java.util.Stack and private Stack<Character> stack = new Stack<Character>()
- * And then replace with my custom stack
- * 
+ * In this code, I used my own stack which I developed.
+ * You can also use java stack if you wish.
  */
 package com.tns.dsa.algo;
 
