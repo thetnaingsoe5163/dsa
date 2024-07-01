@@ -8,6 +8,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import com.tns.dsa.algo.exceptionForFiles.FileIsNotDirectory;
+import com.tns.dsa.algo.exceptionForFiles.PathIsNotAbsolute;
+import com.tns.dsa.algo.exceptionForFiles.TargetDirNotFoundException;
+
 public class FileFinder {
 
 	ArrayList<String> foundFiles;
@@ -32,8 +36,14 @@ public class FileFinder {
 
 	public ArrayList<String> findFile(String folder, String fileName) {
 		File targetSearchDir = new File(folder);
-		if (!targetSearchDir.exists() || !targetSearchDir.isDirectory()) {
-			return null;
+		if (!targetSearchDir.exists()) {
+			throw new TargetDirNotFoundException();
+		}
+		if(!targetSearchDir.isDirectory()) {
+			throw new FileIsNotDirectory();
+		}
+		if(!targetSearchDir.isAbsolute()) {
+			throw new PathIsNotAbsolute();
 		}
 		String file = replaceBlackSlash(folder);
 		file = folder.charAt(folder.length()-1) == '/'? folder.concat(fileName) : folder.concat("/").concat(fileName);
@@ -62,7 +72,10 @@ public class FileFinder {
 					var nameAndExtention = extentionAndFileNameSeparator(searchFileName);
 					var name = nameAndExtention[0];
 					var extention = nameAndExtention[1];
-					if (compareFile.startsWith(name) && compareFile.endsWith(extention)) {
+					compareFile = compareFile.toLowerCase();
+					name = name.toLowerCase();
+					extention = extention.toLowerCase();
+					if ((compareFile.startsWith(name) && compareFile.endsWith(extention)) || (compareFile.contains(name) && compareFile.endsWith(extention))) {
 						foundFiles.add(replaceBlackSlash(file.toString()));
 					}
 				}
@@ -70,9 +83,7 @@ public class FileFinder {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch(IllegalArgumentException e) {
-			System.out.println(e.getMessage());
-		}
+		} 
 
 		return foundFiles;
 	}
