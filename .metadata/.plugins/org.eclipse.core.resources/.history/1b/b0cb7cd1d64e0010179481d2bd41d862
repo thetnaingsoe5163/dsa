@@ -3,6 +3,8 @@ package com.tns.dsa.dsaImpl.linkedList;
 public class DoublyLinkedList extends LinkedList {
 	
 	Node head = null;
+	Node tail = null;
+	
 	int size = 0;
 	
 	private static class Node {
@@ -13,8 +15,6 @@ public class DoublyLinkedList extends LinkedList {
 		Node(int data) {
 			this.data = data;
 		}
-		
-		Node() {}
 		
 		private Node getClone() {
 			Node clonedNode = new Node(this.data);
@@ -30,23 +30,42 @@ public class DoublyLinkedList extends LinkedList {
 		if(head == null) {
 			Node newNode = new Node(item);
 			head = newNode;
+			tail = newNode;
 			++size;
 			return;
 		}
-		Node headBackUp = head.getClone();
-		while(headBackUp.next != null) {
-			headBackUp = headBackUp.next;
-		}
-		if(headBackUp.previous == null & headBackUp.next == null) {
+		
+		if(tail == head) {
 			Node newNode = new Node(item);
-			head.next = newNode;
-			newNode.previous = head;
+			tail = newNode;
+			tail.previous = head;
+			head.next = tail;
 			++size;
 			return;
 		}
+		
+		Node temp = tail;
 		Node newNode = new Node(item);
-		headBackUp.next = newNode;
-		newNode.previous = headBackUp;
+		
+		tail = newNode;
+		newNode.previous = temp;
+		temp.next = tail;
+		
+//		Node headBackUp = head.getClone();
+//		while(headBackUp.next != null) {
+//			headBackUp = headBackUp.next;
+//		}
+//		if(headBackUp.previous == null & headBackUp.next == null) {
+//			Node newNode = new Node(item);
+//			head.next = newNode;
+//			newNode.previous = head;
+//			++size;
+//			return;
+//		}
+//		Node newNode = new Node(item);
+//		headBackUp.next = newNode;
+//		newNode.previous = headBackUp;
+		
 		++size;
 	}
 
@@ -54,11 +73,42 @@ public class DoublyLinkedList extends LinkedList {
 	public void add(int index, int item) {
 		int i = 0;
 		if(head == null && index == 0) {
+//			Node newNode = new Node(item);
+//			head = newNode;
+//			tail = newNode;
+//			++size;
+			add(item);
+			return;
+		}
+		
+		// replacing last node
+		if(index == size-1) {
+			if(head == tail) {
+				Node newNode = new Node(item);
+				head = newNode;
+				head.next = tail;
+				tail.previous = head;
+			}
+			
+			Node temp = tail.previous;
+			
 			Node newNode = new Node(item);
-			head = newNode;
+			temp.next = newNode;
+			newNode.previous = temp;
+			newNode.next = tail;
+			tail.previous = newNode;
 			++size;
 			return;
 		}
+		
+		// insert last
+		if(index == size) {
+			add(item);
+			return;
+		}
+		
+		// insert fast 
+		Node newNode = new Node(item);
 		
 		Node headBackUp = head.getClone();
 		Node previous = null;

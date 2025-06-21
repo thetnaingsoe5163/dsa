@@ -1,5 +1,7 @@
 package com.tns.dsa.dsaImpl.linkedList;
 
+import com.tns.dsa.dsaImpl.linkedList.LinkedList;
+
 public class DoublyLinkedList extends LinkedList {
 	
 	Node head = null;
